@@ -1,0 +1,6 @@
+[package]
+name = "Package Name"
+
+[build]
+
+[run]
