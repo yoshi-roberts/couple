@@ -6,6 +6,7 @@ add_files("src/*.c")
 add_files("lib/getopt/getopt.c")
 add_includedirs("./lib/")
 
+
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
 --
