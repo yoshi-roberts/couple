@@ -37,19 +37,37 @@ typedef struct {
 	ArenaBlock *current;
 } Arena;
 
-union ArenaMaxAlign {
-
-};
-
 void* arena_alloc(Arena *arena, usize size);
 void arena_dealloc(Arena *arena);
 void arena_free(Arena *arena);
 
 typedef struct {
-	i32 *items;
-	i32 len;
-	i32 capacity;
-} Int32Array;
+	void *items;
+	usize length;
+	usize capacity;
+	usize item_size;
+} Array;
+
+Array _array_new(void *items, usize capacity, usize item_size);
+Array _array_new_empty(Arena *arena, usize capacity, usize item_size);
+void* _array_get(Array *array, usize index);
+void _array_push(Array *array, void* item);
+
+#define array_new(type, ...) ({											\
+	usize capacity = sizeof((type[]){ __VA_ARGS__ }) / sizeof(type);	\
+	_array_new((type[]){ __VA_ARGS__ }, capacity, sizeof(type));		\
+})
+
+#define array_empty(arena, type, capacity) \
+	(_array_new_empty(arena, capacity, sizeof(type)))
+
+#define array_get(type, array, index) \
+	(*(type*)_array_get(array, index))
+
+#define array_push(array, value) ({		\
+	__typeof__(value) tmp = value;		\
+	_array_push(array, &tmp);			\
+})
 
 typedef struct {
 	char *chars;

@@ -5,9 +5,18 @@ int main( int argc, const char** argv ) {
 
 	Arena arena = {0};
 
-	const char *str = arena_alloc(&arena, sizeof(char) * 32);
-	sprintf(str, "Hello World!");
-	printf("%s\n", str);
+	Array array = array_empty(&arena, i32, 6);
+	Array array2 = array_new(i32, 1, 3, 5, 2, 7, 5, 9);
+
+	array_push(&array, 123);
+	array_push(&array, 24);
+
+	i32 val = array_get(i32, &array, 0);
+	i32 val2 = array_get(i32, &array, 1);
+	i32 val3 = array_get(i32, &array2, 1);
+	printf("%d\n", val);
+	printf("%d\n", val2);
+	printf("%d\n", val3);
 
 	arena_free(&arena);
 

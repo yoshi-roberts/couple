@@ -1,7 +1,9 @@
 #include "types.h"
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 
 void* arena_alloc(Arena *arena, usize size) {
 
@@ -63,6 +65,49 @@ void arena_free(Arena *arena) {
 	}
 
 	arena->current = arena->blocks = 0;
+}
+
+Array _array_new(void *items, usize capacity, usize item_size) {
+	
+	Array array = {0};
+
+	array.length = capacity;
+	array.capacity = capacity;
+	array.item_size = item_size;
+	array.items = items;
+
+	return array;
+}
+
+Array _array_new_empty(Arena *arena, usize capacity, usize item_size) {
+	
+	Array array = {0};
+
+	array.length = 0;
+	array.capacity = capacity;
+	array.item_size = item_size;
+	array.items = arena_alloc(arena, capacity * item_size);
+
+	return array;
+}
+
+void _array_push(Array *array, void *item) {
+
+	if (array->length < array->capacity) {
+
+		void* target = (i8*)array->items + array->length * array->item_size;
+		memcpy(target, item, array->item_size);
+		array->length++;
+	}
+}
+
+void* _array_get(Array *array, usize index) {
+
+	if (index >= 0 && index < array->length) {
+			return (i8*)array->items + index * array->item_size;
+	}
+
+	return NULL;
 }
 
 String string_new(char *str) {
