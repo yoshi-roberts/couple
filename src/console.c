@@ -1,7 +1,7 @@
-#include "console.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "console.h"
 
 void console_show_help(console_command *commands) {
 

@@ -3,8 +3,7 @@ add_rules("mode.debug", "mode.release")
 target("couple")
 set_kind("binary")
 add_files("src/*.c")
-add_files("lib/getopt/getopt.c")
-add_includedirs("./lib/")
+-- add_includedirs("./lib/")
 
 
 --
