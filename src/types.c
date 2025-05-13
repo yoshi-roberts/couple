@@ -1,6 +1,5 @@
 #include "types.h"
 #include <stddef.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
@@ -79,7 +78,7 @@ Array _array_new(void *items, usize capacity, usize item_size) {
 	return array;
 }
 
-Array _array_new_empty(Arena *arena, usize capacity, usize item_size) {
+Array _array_make(Arena *arena, usize capacity, usize item_size) {
 	
 	Array array = {0};
 
@@ -112,16 +111,60 @@ void* _array_get(Array *array, usize index) {
 
 String string_new(char *str) {
 
+	usize src_len = _string_len(str);
+
 	String string = {
 		.chars = str,
-		.len = _string_len(str) 
+		.length = src_len,
+		.capacity = src_len
 	};
 
 	return string;
 }
 
-i32 _string_len(char *chars) {
-	i32 len = 0;
+String string_make(Arena *arena, usize capacity) {
+
+	String string = {
+		.chars = arena_alloc(arena, sizeof(char) * capacity),
+		.length = 0,
+		.capacity = capacity
+	};
+
+	return string;
+}
+
+String string_copy(Arena *arena, String *original) {
+
+	String copy = {
+		.chars = arena_alloc(arena, sizeof(char) * original->length),
+		.length = original->length
+	};
+
+	for (int i = 0; i <= original->length; ++i) {
+		copy.chars[i] = original->chars[i];
+	}
+	copy.chars[copy.length] = '\0';
+
+	return copy;
+}
+
+void string_write(String *string, char *literal) {
+
+	usize len = _string_len(literal);
+	
+	if (len > string->capacity) {
+		error("Literal too long");
+	}
+
+	string->length = len;
+
+	for (int i = 0; i <= string->length; ++i) {
+		string->chars[i] = literal[i];
+	}
+}
+
+usize _string_len(char *chars) {
+	usize len = 0;
 
 	for(int i = 0; chars[i] != '\0'; i++) {
 		len++;	

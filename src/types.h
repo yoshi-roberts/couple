@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 typedef int8_t   i8;
 typedef int16_t  i16;
@@ -21,8 +22,27 @@ typedef size_t    usize;
 typedef ptrdiff_t isize;
 typedef usize uptr;
 
+typedef union {
+    long long ll;
+    long double ld;
+    void *p;
+} max_align;
+
+#if defined(_MSC_VER)
+	#include <intrin.h>
+	#define TRAP() __debugbreak()
+#elif defined(__GNUC__) || defined(__clang__)
+	#include <signal.h>
+	#define TRAP() __builtin_trap()
+#endif
+
+#define error(message) ({			\
+	printf("ERROR: %s\n", message);	\
+	TRAP();							\
+})
+
 #define ARENA_BLOCK_SIZE (16*1024)
-#define ARENA_MAX_ALIGN _Alignof(max_align_t)
+#define ARENA_MAX_ALIGN _Alignof(max_align)
 #define ARENA_ALIGN_UP(x, n) (((x) + (n) - 1) & ~((n) - 1))
 
 typedef struct ArenaBlock {
@@ -49,7 +69,7 @@ typedef struct {
 } Array;
 
 Array _array_new(void *items, usize capacity, usize item_size);
-Array _array_new_empty(Arena *arena, usize capacity, usize item_size);
+Array _array_make(Arena *arena, usize capacity, usize item_size);
 void* _array_get(Array *array, usize index);
 void _array_push(Array *array, void* item);
 
@@ -58,8 +78,8 @@ void _array_push(Array *array, void* item);
 	_array_new((type[]){ __VA_ARGS__ }, capacity, sizeof(type));		\
 })
 
-#define array_empty(arena, type, capacity) \
-	(_array_new_empty(arena, capacity, sizeof(type)))
+#define array_make(arena, type, capacity) \
+	(_array_make(arena, capacity, sizeof(type)))
 
 #define array_get(type, array, index) \
 	(*(type*)_array_get(array, index))
@@ -71,10 +91,15 @@ void _array_push(Array *array, void* item);
 
 typedef struct {
 	char *chars;
-	i32 len;
+	usize length;
+	usize capacity;
 } String;
 
 String string_new(char *str);
-i32 _string_len(char *chars);
+String string_make(Arena *arena, usize capacity);
+String string_copy(Arena *arena, String *original);
+void string_write(String *string, char *literal);
+char string_get(String *string, usize index);
+usize _string_len(char *chars);
 
 #endif // !TYPES_H
