@@ -100,6 +100,16 @@ void _array_push(Array *array, void *item) {
 	}
 }
 
+void _array_set(Array *array, void *item, usize index) {
+
+	if (array->length < array->capacity) {
+
+		void* target = (i8*)array->items + index * array->item_size;
+		memcpy(target, item, array->item_size);
+		array->length++;
+	}
+}
+
 void* _array_get(Array *array, usize index) {
 
 	if (index >= 0 && index < array->length) {
@@ -161,6 +171,14 @@ void string_write(String *string, char *literal) {
 	for (int i = 0; i <= string->length; ++i) {
 		string->chars[i] = literal[i];
 	}
+}
+
+bool string_cmp(String *a, String *b) {
+	if (strcmp(str(a), str(b)) == 0) {
+		return true;
+	}
+
+	return false;
 }
 
 usize _string_len(char *chars) {

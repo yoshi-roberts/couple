@@ -72,6 +72,7 @@ Array _array_new(void *items, usize capacity, usize item_size);
 Array _array_make(Arena *arena, usize capacity, usize item_size);
 void* _array_get(Array *array, usize index);
 void _array_push(Array *array, void* item);
+void _array_set(Array *array, void *item, usize index);
 
 #define array_new(type, ...) ({											\
 	usize capacity = sizeof((type[]){ __VA_ARGS__ }) / sizeof(type);	\
@@ -84,9 +85,17 @@ void _array_push(Array *array, void* item);
 #define array_get(type, array, index) \
 	(*(type*)_array_get(array, index))
 
+#define array_get_ptr(type, array, index) \
+	((type*)_array_get(array, index))
+
 #define array_push(array, value) ({		\
 	__typeof__(value) tmp = value;		\
 	_array_push(array, &tmp);			\
+})
+
+#define array_set(array, value, index) ({    \
+	__typeof__(value) tmp = value;		\
+	_array_set(array, &tmp, index);		 \
 })
 
 typedef struct {
@@ -100,6 +109,13 @@ String string_make(Arena *arena, usize capacity);
 String string_copy(Arena *arena, String *original);
 void string_write(String *string, char *literal);
 char string_get(String *string, usize index);
+bool string_cmp(String *a, String *b);
 usize _string_len(char *chars);
+
+#define len(obj)\
+    ((obj)->length)
+
+#define str(string) \
+    ((string)->chars)
 
 #endif // !TYPES_H

@@ -1,7 +1,9 @@
-#include "types.h"
 #include <stdio.h>
 
-int main( int argc, const char** argv ) {
+#include "types.h"
+#include "console.h"
+
+int main(int argc, const char** argv) {
 
 	Arena arena = {0};
 
@@ -29,22 +31,17 @@ int main( int argc, const char** argv ) {
 
 	printf("%s | %lu\n", strb.chars, strb.length);
 
-	arena_free(&arena);
+	const char *path = NULL;
 
-	// console_command commands[] = {
-	// 	COMMAND_STRING("new", "Create a new project"),
-	// 	COMMAND_END()
-	// };
-	//
-	// console_result result = console_parse(commands, argc, argv);
-	//
-	// if (strcmp(result.command_name, "new") == 0) {
-	// 	if (result.arg_count > 0) {
-	// 		printf("%s\n", result.args[0]);
-	// 	}
-	// }
-	//
-	// free(result.args);
+	Array commands = array_new(console_command,
+		COMMAND_STRING("new", "create a new project"),
+		COMMAND_STRING("run", "run the project"),
+		COMMAND_STRING("build", "build the project"),
+	);
+
+	console_result result = console_parse(&arena, &commands, argc, argv);
+
+	arena_free(&arena);
 
 	return 0;
 }
