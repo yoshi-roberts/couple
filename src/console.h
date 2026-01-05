@@ -10,7 +10,9 @@ typedef enum {
 
 typedef struct {
 	String name;
+	String usage;
 	String description;
+	usize arg_count;
 	console_command_type type;
 } console_command;
 
@@ -19,9 +21,13 @@ typedef struct {
 	Array args;
 } console_result;
 
-#define COMMAND_STRING(_name, _desc) \
-	((console_command){ \
-		.name = (_name), .description = (_desc), .type = (COMMAND_TYPE_STRING) \
+#define COMMAND_STRING(_name, _arg_count, _usage, _desc) \
+	((console_command){                          \
+		.name = (_name),                         \
+        .usage = (string_new(_usage)),           \
+		.arg_count = (_arg_count),               \
+		.description = (_desc),                  \
+		.type = (COMMAND_TYPE_STRING)            \
 	})
 #define COMMAND_END() \
 	((console_command){ .type = (COMMAND_TYPE_END) })

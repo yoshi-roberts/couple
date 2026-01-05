@@ -1,5 +1,6 @@
 #include "types.h"
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
@@ -189,4 +190,29 @@ usize _string_len(char *chars) {
 	}
 
 	return len;
+}
+
+File file_read(Arena *arena, const char *file_path) {
+
+	File file = {};
+
+	file.path = string_new((char*)file_path);
+	file.fptr = fopen(file_path, "r");
+
+	if (!file.fptr) {
+		error("Could not open file.");
+	}
+
+	// Read contents
+	
+	fseek(file.fptr, 0, SEEK_END); 
+	usize size = ftell(file.fptr);
+	fseek(file.fptr, 0, SEEK_SET);
+
+	file.contents = string_make(arena, size);
+	fread(file.contents.chars, size, 1, file.fptr);
+	
+	fclose(file.fptr);
+
+	return file;
 }

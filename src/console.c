@@ -5,11 +5,14 @@
 
 void console_show_help(Array *commands) {
 
-	printf("Commands:\n");
+	printf("\nUsage: couple <command> [<arguments>]...\n");
+	printf("\nCommands:\n\n");
 
-	for (int i = 0; i < len(commands); ++i) {
+	for (usize i = 0; i < len(commands); ++i) {
+
 		console_command *cmd = array_get_ptr(console_command, commands, i);
-		printf("	%-10s%s\n", str(&cmd->name), str(&cmd->description));
+
+		printf("	%-10s%-10s%s\n", str(&cmd->name), str(&cmd->usage), str(&cmd->description));
 	}
 }
 
@@ -23,7 +26,7 @@ console_result console_parse(Arena *arena, Array *commands, int argc, const char
 	// const char *cmd_name = argv[1];
 	String cmd_name = string_new((char*)argv[1]); 
 
-	for (int i = 0; i < len(commands); i++) {
+	for (usize i = 0; i < len(commands); i++) {
 
 		console_command *cmd = array_get_ptr(console_command, commands, i);
 
