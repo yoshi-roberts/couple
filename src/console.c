@@ -5,32 +5,38 @@
 
 void console_show_help(Array *commands) {
 
-	printf("\nUsage: couple <command> [<arguments>]...\n");
+	printf("\nUsage: couple <command> [arguments]\n");
 	printf("\nCommands:\n\n");
 
 	for (usize i = 0; i < len(commands); ++i) {
 
 		console_command *cmd = array_get_ptr(console_command, commands, i);
 
-		printf("	%-10s%-10s%s\n", str(&cmd->name), str(&cmd->usage), str(&cmd->description));
+		printf("	%-10s%-10s%s\n", lit(&cmd->name), lit(&cmd->usage), lit(&cmd->description));
 	}
 }
 
 console_result console_parse(Arena *arena, Array *commands, int argc, const char **argv) {
 
+	console_result result = {0};
+
 	if (argc == 1) {
 		console_show_help(commands);
-		exit(0);
+		return result;
 	}
 
-	// const char *cmd_name = argv[1];
 	String cmd_name = string_new((char*)argv[1]); 
 
 	for (usize i = 0; i < len(commands); i++) {
 
 		console_command *cmd = array_get_ptr(console_command, commands, i);
 
-		if (string_cmp(&cmd_name, &cmd->name)) {
+		if (string_cmp_lit(&cmd_name, "help")) {
+
+			console_show_help(commands);
+			return result;
+
+		} else if (string_cmp(&cmd_name, &cmd->name)) {
 
 			// Get args
 			Array args = array_make(arena, String, argc - 2);
@@ -41,13 +47,23 @@ console_result console_parse(Arena *arena, Array *commands, int argc, const char
 				array_push(&args, arg);
 			}
 
-			return (console_result) {
-				.command = cmd_name,
-				.args = args
-			};
+			if (len(&args) != cmd->arg_count) {
+				printf(
+					"\n%s takes %lu arguments. %lu were provided.\n",
+					lit(&cmd->name),
+					cmd->arg_count,
+					len(&args)
+				);
+				printf("use the help command to see usage.\n");
+			}
+
+			result.command = cmd_name;
+			result.args = args;
+
+			return result;
 		}
 	}
 
-	printf("'%s' is not a valid command.\n", str(&cmd_name));
-	exit(0);
+	printf("'%s' is not a valid command.\n", lit(&cmd_name));
+	return result;
 }

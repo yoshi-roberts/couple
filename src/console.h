@@ -4,8 +4,9 @@
 #include "types.h"
 
 typedef enum {
-	COMMAND_TYPE_STRING,
-	COMMAND_TYPE_END
+	COMMAND_TYPE_EXACT,
+	COMMAND_TYPE_MIN,
+	COMMAND_TYPE_MAX,
 } console_command_type;
 
 typedef struct {
@@ -21,16 +22,32 @@ typedef struct {
 	Array args;
 } console_result;
 
-#define COMMAND_STRING(_name, _arg_count, _usage, _desc) \
+typedef void (*command_handler)(console_result *result);
+
+#define COMMAND_EXACT(_name, _arg_count, _usage, _desc) \
 	((console_command){                          \
 		.name = (_name),                         \
         .usage = (string_new(_usage)),           \
 		.arg_count = (_arg_count),               \
 		.description = (_desc),                  \
-		.type = (COMMAND_TYPE_STRING)            \
+		.type = (COMMAND_TYPE_EXACT)            \
 	})
-#define COMMAND_END() \
-	((console_command){ .type = (COMMAND_TYPE_END) })
+#define COMMAND_MIN(_name, _arg_count, _usage, _desc) \
+	((console_command){                          \
+		.name = (_name),                         \
+        .usage = (string_new(_usage)),           \
+		.arg_count = (_arg_count),               \
+		.description = (_desc),                  \
+		.type = (COMMAND_TYPE_MIN)            \
+	})
+#define COMMAND_MAX(_name, _arg_count, _usage, _desc) \
+	((console_command){                          \
+		.name = (_name),                         \
+        .usage = (string_new(_usage)),           \
+		.arg_count = (_arg_count),               \
+		.description = (_desc),                  \
+		.type = (COMMAND_TYPE_MAX)            \
+	})
 
 console_result console_parse(Arena *arena, Array *commands, int argc, const char **argv);
 void console_show_help(Array *commands);

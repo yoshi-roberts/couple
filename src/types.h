@@ -110,13 +110,17 @@ String string_copy(Arena *arena, String *original);
 void string_write(String *string, char *literal);
 char string_get(String *string, usize index);
 bool string_cmp(String *a, String *b);
+bool string_cmp_lit(String *a, const char *b);
 usize _string_len(char *chars);
 
 #define len(obj)\
     ((obj)->length)
 
-#define str(string) \
+#define lit(string) \
     ((string)->chars)
+
+#define str(literal) \
+    (string_new(literal))
 
 typedef struct {
 	FILE *fptr;

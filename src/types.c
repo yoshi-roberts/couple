@@ -175,7 +175,15 @@ void string_write(String *string, char *literal) {
 }
 
 bool string_cmp(String *a, String *b) {
-	if (strcmp(str(a), str(b)) == 0) {
+	if (strcmp(lit(a), lit(b)) == 0) {
+		return true;
+	}
+
+	return false;
+}
+
+bool string_cmp_lit(String *a, const char *b) {
+	if (strcmp(lit(a), b) == 0) {
 		return true;
 	}
 
