@@ -22,6 +22,8 @@ typedef size_t    usize;
 typedef ptrdiff_t isize;
 typedef usize uptr;
 
+typedef const char* literal;
+
 typedef union {
     long long ll;
     long double ld;
@@ -40,6 +42,19 @@ typedef union {
 	printf("ERROR: %s\n", message);	\
 	TRAP();							\
 })
+
+#ifdef _WIN32
+    #include <direct.h>
+    #define mkdir(path, mode) _mkdir(path)
+#else
+    #include <sys/stat.h>
+    #include <sys/types.h>
+#endif
+
+// static void error(const char *msg, const char *msg1) {
+//   fprintf(stderr, "ERROR: %s%s\n", msg, msg1 ? msg1 : "");
+//   exit(1);
+// }
 
 #define ARENA_BLOCK_SIZE (16*1024)
 #define ARENA_MAX_ALIGN _Alignof(max_align)
@@ -104,14 +119,15 @@ typedef struct {
 	usize capacity;
 } String;
 
-String string_new(char *str);
+String string_new(literal string_lit);
 String string_make(Arena *arena, usize capacity);
 String string_copy(Arena *arena, String *original);
-void string_write(String *string, char *literal);
+void string_write(String *string, char *string_lit);
 char string_get(String *string, usize index);
 bool string_cmp(String *a, String *b);
-bool string_cmp_lit(String *a, const char *b);
-usize _string_len(char *chars);
+bool string_cmp_lit(String *a, literal b);
+String string_cat(Arena *arena, literal a, literal b);
+usize _string_len(const char *chars);
 
 #define len(obj)\
     ((obj)->length)
@@ -119,8 +135,8 @@ usize _string_len(char *chars);
 #define lit(string) \
     ((string)->chars)
 
-#define str(literal) \
-    (string_new(literal))
+#define str(_lit) \
+    (string_new(_lit))
 
 typedef struct {
 	FILE *fptr;
@@ -129,6 +145,9 @@ typedef struct {
 } File;
 
 File file_read(Arena *arena, const char *file_path);
+File file_write(literal file_path, literal contents);
+
+int directory_make(const char *path);
 
 /*
 -- EXAMPLES --

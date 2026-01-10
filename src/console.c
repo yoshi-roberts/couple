@@ -10,15 +10,15 @@ void console_show_help(Array *commands) {
 
 	for (usize i = 0; i < len(commands); ++i) {
 
-		console_command *cmd = array_get_ptr(console_command, commands, i);
+		ConsoleCommand *cmd = array_get_ptr(ConsoleCommand, commands, i);
 
 		printf("	%-10s%-10s%s\n", lit(&cmd->name), lit(&cmd->usage), lit(&cmd->description));
 	}
 }
 
-console_result console_parse(Arena *arena, Array *commands, int argc, const char **argv) {
+ConsoleResult console_parse(Arena *arena, Array *commands, int argc, const char **argv) {
 
-	console_result result = {0};
+	ConsoleResult result = {0};
 
 	if (argc == 1) {
 		console_show_help(commands);
@@ -29,7 +29,7 @@ console_result console_parse(Arena *arena, Array *commands, int argc, const char
 
 	for (usize i = 0; i < len(commands); i++) {
 
-		console_command *cmd = array_get_ptr(console_command, commands, i);
+		ConsoleCommand *cmd = array_get_ptr(ConsoleCommand, commands, i);
 
 		if (string_cmp_lit(&cmd_name, "help")) {
 
@@ -48,17 +48,14 @@ console_result console_parse(Arena *arena, Array *commands, int argc, const char
 			}
 
 			if (len(&args) != cmd->arg_count) {
-				printf(
-					"\n%s takes %lu arguments. %lu were provided.\n",
-					lit(&cmd->name),
-					cmd->arg_count,
-					len(&args)
-				);
-				printf("use the help command to see usage.\n");
+				printf("\nInvalid number of arguments.\n");
+				printf("Use the help command to see usage.\n");
+				return result;
 			}
 
 			result.command = cmd_name;
 			result.args = args;
+			result.initialized = true;
 
 			return result;
 		}

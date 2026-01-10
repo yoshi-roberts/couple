@@ -5,6 +5,8 @@
 #include <assert.h>
 #include <string.h>
 
+// -- Arena --
+
 void* arena_alloc(Arena *arena, usize size) {
 
 	ArenaBlock *it, *prev;
@@ -67,6 +69,8 @@ void arena_free(Arena *arena) {
 	arena->current = arena->blocks = 0;
 }
 
+// -- Array --
+
 Array _array_new(void *items, usize capacity, usize item_size) {
 	
 	Array array = {0};
@@ -120,12 +124,14 @@ void* _array_get(Array *array, usize index) {
 	return NULL;
 }
 
-String string_new(char *str) {
+// -- String --
 
-	usize src_len = _string_len(str);
+String string_new(literal string_lit) {
+
+	usize src_len = _string_len(string_lit);
 
 	String string = {
-		.chars = str,
+		.chars = (char*)string_lit,
 		.length = src_len,
 		.capacity = src_len
 	};
@@ -159,9 +165,9 @@ String string_copy(Arena *arena, String *original) {
 	return copy;
 }
 
-void string_write(String *string, char *literal) {
+void string_write(String *string, char *string_lit) {
 
-	usize len = _string_len(literal);
+	usize len = _string_len(string_lit);
 	
 	if (len > string->capacity) {
 		error("Literal too long");
@@ -170,8 +176,24 @@ void string_write(String *string, char *literal) {
 	string->length = len;
 
 	for (int i = 0; i <= string->length; ++i) {
-		string->chars[i] = literal[i];
+		string->chars[i] = string_lit[i];
 	}
+}
+
+String string_cat(Arena *arena, literal a, literal b) {
+
+	usize a_len = _string_len(a);
+	usize b_len = _string_len(b);
+
+	String new = {
+		.chars = arena_alloc(arena, sizeof(char) * (a_len + b_len)),
+		.length = a_len + b_len,
+	};
+
+	strcat(new.chars, a);
+	strcat(new.chars, b);
+
+	return new;
 }
 
 bool string_cmp(String *a, String *b) {
@@ -182,7 +204,7 @@ bool string_cmp(String *a, String *b) {
 	return false;
 }
 
-bool string_cmp_lit(String *a, const char *b) {
+bool string_cmp_lit(String *a, literal b) {
 	if (strcmp(lit(a), b) == 0) {
 		return true;
 	}
@@ -190,7 +212,7 @@ bool string_cmp_lit(String *a, const char *b) {
 	return false;
 }
 
-usize _string_len(char *chars) {
+usize _string_len(const char *chars) {
 	usize len = 0;
 
 	for(int i = 0; chars[i] != '\0'; i++) {
@@ -200,9 +222,11 @@ usize _string_len(char *chars) {
 	return len;
 }
 
+// -- File --
+
 File file_read(Arena *arena, const char *file_path) {
 
-	File file = {};
+	File file = {0};
 
 	file.path = string_new((char*)file_path);
 	file.fptr = fopen(file_path, "r");
@@ -223,4 +247,26 @@ File file_read(Arena *arena, const char *file_path) {
 	fclose(file.fptr);
 
 	return file;
+}
+
+File file_write(literal file_path, literal contents) {
+
+	File file = {0};
+
+	file.path = string_new((char*)file_path);
+	file.fptr = fopen(file_path, "w");
+
+	if (!file.fptr) {
+		error("Could not open file.");
+	}
+
+	fprintf(file.fptr, "%s", contents);
+	
+	fclose(file.fptr);
+
+	return file;
+}
+
+int directory_make(const char *path) {
+	return mkdir(path, 0755);
 }
