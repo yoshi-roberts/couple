@@ -15,10 +15,12 @@ end)
 -- end)
 package_end()
 
+add_requires("zip")
+
 target("couple")
 set_languages("c99")
 set_kind("binary")
 
+add_packages("zip")
 add_files("lib/tomlc17.c")
 add_files("src/*.c")
-add_packages("zip")

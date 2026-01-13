@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "console.h"
-#include "types.h"
 
 void console_show_help(Array *commands) {
 

@@ -51,6 +51,12 @@ typedef union {
     #include <sys/types.h>
 #endif
 
+#ifdef _WIN32
+    #include "../lib/dirent.h"
+#else
+    #include <dirent.h>
+#endif
+
 // static void error(const char *msg, const char *msg1) {
 //   fprintf(stderr, "ERROR: %s%s\n", msg, msg1 ? msg1 : "");
 //   exit(1);
@@ -126,8 +132,14 @@ void string_write(String *string, char *string_lit);
 char string_get(String *string, usize index);
 bool string_cmp(String *a, String *b);
 bool string_cmp_lit(String *a, literal b);
-String string_cat(Arena *arena, literal a, literal b);
+String string_cat(Arena *arena, Array literals);
 usize _string_len(const char *chars);
+
+#define cat(arena, ...) ({			                                \
+	usize capacity = sizeof((literal[]){ __VA_ARGS__ }) / sizeof(literal);	\
+	Array literals = _array_new((literal[]){ __VA_ARGS__ }, capacity, sizeof(literal));		\
+	string_cat(arena, literals);                                    \
+})
 
 #define len(obj)\
     ((obj)->length)
@@ -148,6 +160,7 @@ File file_read(Arena *arena, const char *file_path);
 File file_write(literal file_path, literal contents);
 
 int directory_make(const char *path);
+bool directory_exists(const char *path);
 
 /*
 -- EXAMPLES --

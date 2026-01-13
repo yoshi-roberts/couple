@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "types.h"
+#include "helper.h"
 
 /*
 
@@ -19,8 +19,7 @@ build = "build"
 #define CONFIG_TEMPLATE \
 "[package]\n"           \
 "name = \"Name\"\n"     \
-"author = \"Author\"\n" \
-"version = \"0.1.0\"\n"   \
+"version = \"0.1.0\"\n" \
 "\n"                    \
 "[directories]\n"       \
 "src = \"src\"\n"       \
@@ -39,8 +38,14 @@ typedef struct {
 } PackageConfig;
 
 typedef struct {
+	String src;
+	String build;
+} DirectoriesConfig;
+
+typedef struct {
 	String path;
 	PackageConfig package;
+	DirectoriesConfig directories;
 } Project;
 
 void config_new(literal file_path);

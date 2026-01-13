@@ -1,7 +1,7 @@
 #ifndef CONSOLE_H
 #define CONSOLE_H
 
-#include "types.h"
+#include "helper.h"
 
 typedef enum {
 	COMMAND_TYPE_EXACT,

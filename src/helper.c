@@ -1,9 +1,11 @@
-#include "types.h"
+#include "helper.h"
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 // -- Arena --
 
@@ -180,18 +182,28 @@ void string_write(String *string, char *string_lit) {
 	}
 }
 
-String string_cat(Arena *arena, literal a, literal b) {
+String string_cat(Arena *arena, Array literals) {
 
-	usize a_len = _string_len(a);
-	usize b_len = _string_len(b);
+	// NOTE: Probably a better way to do this.
+
+	usize total_len = 0;
+
+	for (usize i = 0; i < len(&literals); i++) {
+
+		literal l = array_get(literal, &literals, i);
+		total_len += _string_len(l);
+	}
 
 	String new = {
-		.chars = arena_alloc(arena, sizeof(char) * (a_len + b_len)),
-		.length = a_len + b_len,
+		.chars = arena_alloc(arena, sizeof(char) * (total_len)),
+		.length = total_len,
 	};
 
-	strcat(new.chars, a);
-	strcat(new.chars, b);
+	for (usize i = 0; i < len(&literals); i++) {
+
+		literal l = array_get(literal, &literals, i);
+		strcat(new.chars, l);
+	}
 
 	return new;
 }
@@ -269,4 +281,17 @@ File file_write(literal file_path, literal contents) {
 
 int directory_make(const char *path) {
 	return mkdir(path, 0755);
+}
+
+bool directory_exists(const char *path) {
+
+	// struct stat info;
+	//
+	// if( stat( path, &info ) != 0 ) {
+	// 	return false;
+	// } else if( info.st_mode & S_IFDIR ) {
+	// 	return true;
+	// }
+
+	return false;
 }
