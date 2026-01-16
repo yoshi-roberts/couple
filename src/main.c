@@ -1,4 +1,5 @@
 #include "builders.h"
+#include "deps.h"
 #include "helper.h"
 #include "console.h"
 #include "project.h"
@@ -32,23 +33,27 @@ int main(int argc, const char** argv) {
 
 	} else if (string_cmp_lit(&result.command, "build")) {
 
-		String *path = array_get_ptr(String, &result.args, 0);
-		printf("PATH: %s\n", lit(path));
+		Project proj = project_load(&arena);
 
-		Project proj = project_load(&arena, lit(path));
+		if (proj.initialized) {
 
-		if (!directory_exists(lit(&proj.directories.build))) {
-			directory_make(lit(&proj.directories.build));
-			printf("Created build directory\n");
+			String *target = array_get_ptr(String, &result.args, 0);
+
+			if (!dep_check(&arena, target)) {
+
+				int downloaded = dep_get(&arena, target);
+				printf("DOWNLOADED: %d\n", downloaded);
+			}
+
+			build_love(&arena, &proj);
 		}
 
-		build_love(&arena, &proj);
 
 	} else if (string_cmp_lit(&result.command, "run")) {
 
 		String *path = array_get_ptr(String, &result.args, 0);
 		printf("PATH: %s\n", lit(path));
-		Project proj = project_load(&arena, lit(path));
+		Project proj = project_load(&arena);
 		String love_cmd = cat(&arena, "love ", lit(&proj.directories.src));
 
 		system(lit(&love_cmd));

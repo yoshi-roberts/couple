@@ -1,5 +1,6 @@
 #include "project.h"
 #include "../lib/tomlc17.h"
+#include "helper.h"
 
 void config_new(literal file_path) {
 	File conf_file = file_write(file_path, CONFIG_TEMPLATE);
@@ -19,19 +20,27 @@ void project_init(Arena *arena, literal path) {
 	File main_file = file_write(lit(&main_path), MAIN_TEMPLATE);
 }
 
-Project project_load(Arena *arena, literal path) {
+Project project_load(Arena *arena) {
 
 	Project proj = {0};
+	proj.initialized = false;
 
-	proj.path = str(path);
+	// Check that the current dir is a valid project.
+	if (!file_exists("couple.toml")) {
+		printf("The current directory is not a valid project.\n");
+		return proj;
+	}
+
+	// proj.path = str(path);
 
 	// String config_path = string_cat(arena, lit(&proj.path), "/couple.toml");
-	String config_path = cat(arena, lit(&proj.path), "/couple.toml");
+	// String config_path = cat(arena, lit(&proj.path), "/couple.toml");
+	String config_path = str("couple.toml");
 
 	toml_result_t result = toml_parse_file_ex(lit(&config_path));
 
 	if (!result.ok) {
-		error(result.errmsg);
+		printf("%s\n", result.errmsg);
 	}
 
 	toml_datum_t package_name = toml_seek(result.toptab, "package.name");
@@ -47,13 +56,14 @@ Project project_load(Arena *arena, literal path) {
 	toml_datum_t src_dir = toml_seek(result.toptab, "directories.src");
 	toml_datum_t build_dir = toml_seek(result.toptab, "directories.build");
 
-	String full_src_path = cat(arena, lit(&proj.path), "/", src_dir.u.s);
-	String full_build_path = cat(arena, lit(&proj.path), "/", build_dir.u.s);
+	// String full_src_path = cat(arena, lit(&proj.path), "/", src_dir.u.s);
+	// String full_build_path = cat(arena, lit(&proj.path), "/", build_dir.u.s);
 
-	proj.directories.src = full_src_path;
-	proj.directories.build = full_build_path;
+	proj.directories.src = str(src_dir.u.s);
+	proj.directories.build = str(build_dir.u.s);
 
 	toml_free(result);
 
+	proj.initialized = true;
 	return proj;
 }

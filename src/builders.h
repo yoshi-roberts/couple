@@ -5,6 +5,7 @@
 #include "../lib/zip/src/zip.h"
 
 void build_love(Arena *arena, Project *proj);
-void _zip_walk(Arena *arena, struct zip_t *zip, String path);
+void _zip_walk(Arena *arena, struct zip_t *zip, String path, String relative_path);
+void build_win64(Arena *arena, Project *proj);
 
 #endif // !BUILDERS_H

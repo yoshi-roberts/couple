@@ -46,10 +46,11 @@ typedef struct {
 	String path;
 	PackageConfig package;
 	DirectoriesConfig directories;
+	bool initialized;
 } Project;
 
 void config_new(literal file_path);
 void project_init(Arena *arena, literal path);
-Project project_load(Arena *arena, literal path);
+Project project_load(Arena *arena);
 
 #endif // !CONFIG_H

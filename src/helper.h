@@ -46,16 +46,17 @@ typedef union {
 #ifdef _WIN32
     #include <direct.h>
     #define mkdir(path, mode) _mkdir(path)
+    #include <io.h>
+    #define access    _access
+    #define F_OK      0
+    #include "../lib/dirent.h"
 #else
     #include <sys/stat.h>
     #include <sys/types.h>
+    #include <dirent.h>
+    #include <unistd.h>
 #endif
 
-#ifdef _WIN32
-    #include "../lib/dirent.h"
-#else
-    #include <dirent.h>
-#endif
 
 // static void error(const char *msg, const char *msg1) {
 //   fprintf(stderr, "ERROR: %s%s\n", msg, msg1 ? msg1 : "");
@@ -158,6 +159,7 @@ typedef struct {
 
 File file_read(Arena *arena, const char *file_path);
 File file_write(literal file_path, literal contents);
+bool file_exists(literal file_path);
 
 int directory_make(const char *path);
 bool directory_exists(const char *path);

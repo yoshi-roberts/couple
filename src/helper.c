@@ -6,6 +6,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 // -- Arena --
 
@@ -279,19 +280,23 @@ File file_write(literal file_path, literal contents) {
 	return file;
 }
 
+bool file_exists(literal file_path) {
+	return access(file_path, F_OK) == 0;
+}
+
 int directory_make(const char *path) {
 	return mkdir(path, 0755);
 }
 
 bool directory_exists(const char *path) {
 
-	// struct stat info;
-	//
-	// if( stat( path, &info ) != 0 ) {
-	// 	return false;
-	// } else if( info.st_mode & S_IFDIR ) {
-	// 	return true;
-	// }
+	DIR *dir = opendir(path);
 
+    if (dir) {
+        closedir(dir);
+        return true;
+    }
+
+	closedir(dir);
 	return false;
 }

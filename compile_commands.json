@@ -1,0 +1,36 @@
+[
+{
+  "directory": "/home/dev/proj/c/couple",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-std=c99", "-I", "/home/dev/proj/c/couple/build/.packages/z/zip/latest/4e0143c97b65425b855ad5fd03038b6a/include", "-I", "/home/dev/.xmake/packages/l/libcurl/8.11.0/65e7361bb5ef4bb4973edb832c4b9fd1/include", "-I", "/home/dev/.xmake/packages/o/openssl3/3.6.0/230aa242866e4a7eae3ca8cf326b9ce5/include", "-DNDEBUG", "-o", "build/.objs/couple/linux/x86_64/release/lib/tomlc17.c.o", "lib/tomlc17.c"],
+  "file": "lib/tomlc17.c"
+},
+{
+  "directory": "/home/dev/proj/c/couple",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-std=c99", "-I", "/home/dev/proj/c/couple/build/.packages/z/zip/latest/4e0143c97b65425b855ad5fd03038b6a/include", "-I", "/home/dev/.xmake/packages/l/libcurl/8.11.0/65e7361bb5ef4bb4973edb832c4b9fd1/include", "-I", "/home/dev/.xmake/packages/o/openssl3/3.6.0/230aa242866e4a7eae3ca8cf326b9ce5/include", "-DNDEBUG", "-o", "build/.objs/couple/linux/x86_64/release/src/console.c.o", "src/console.c"],
+  "file": "src/console.c"
+},
+{
+  "directory": "/home/dev/proj/c/couple",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-std=c99", "-I", "/home/dev/proj/c/couple/build/.packages/z/zip/latest/4e0143c97b65425b855ad5fd03038b6a/include", "-I", "/home/dev/.xmake/packages/l/libcurl/8.11.0/65e7361bb5ef4bb4973edb832c4b9fd1/include", "-I", "/home/dev/.xmake/packages/o/openssl3/3.6.0/230aa242866e4a7eae3ca8cf326b9ce5/include", "-DNDEBUG", "-o", "build/.objs/couple/linux/x86_64/release/src/love.c.o", "src/love.c"],
+  "file": "src/love.c"
+},
+{
+  "directory": "/home/dev/proj/c/couple",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-std=c99", "-I", "/home/dev/proj/c/couple/build/.packages/z/zip/latest/4e0143c97b65425b855ad5fd03038b6a/include", "-I", "/home/dev/.xmake/packages/l/libcurl/8.11.0/65e7361bb5ef4bb4973edb832c4b9fd1/include", "-I", "/home/dev/.xmake/packages/o/openssl3/3.6.0/230aa242866e4a7eae3ca8cf326b9ce5/include", "-DNDEBUG", "-o", "build/.objs/couple/linux/x86_64/release/src/helper.c.o", "src/helper.c"],
+  "file": "src/helper.c"
+},
+{
+  "directory": "/home/dev/proj/c/couple",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-std=c99", "-I", "/home/dev/proj/c/couple/build/.packages/z/zip/latest/4e0143c97b65425b855ad5fd03038b6a/include", "-I", "/home/dev/.xmake/packages/l/libcurl/8.11.0/65e7361bb5ef4bb4973edb832c4b9fd1/include", "-I", "/home/dev/.xmake/packages/o/openssl3/3.6.0/230aa242866e4a7eae3ca8cf326b9ce5/include", "-DNDEBUG", "-o", "build/.objs/couple/linux/x86_64/release/src/project.c.o", "src/project.c"],
+  "file": "src/project.c"
+},
+{
+  "directory": "/home/dev/proj/c/couple",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-std=c99", "-I", "/home/dev/proj/c/couple/build/.packages/z/zip/latest/4e0143c97b65425b855ad5fd03038b6a/include", "-I", "/home/dev/.xmake/packages/l/libcurl/8.11.0/65e7361bb5ef4bb4973edb832c4b9fd1/include", "-I", "/home/dev/.xmake/packages/o/openssl3/3.6.0/230aa242866e4a7eae3ca8cf326b9ce5/include", "-DNDEBUG", "-o", "build/.objs/couple/linux/x86_64/release/src/main.c.o", "src/main.c"],
+  "file": "src/main.c"
+},
+{
+  "directory": "/home/dev/proj/c/couple",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-O3", "-std=c99", "-I", "/home/dev/proj/c/couple/build/.packages/z/zip/latest/4e0143c97b65425b855ad5fd03038b6a/include", "-I", "/home/dev/.xmake/packages/l/libcurl/8.11.0/65e7361bb5ef4bb4973edb832c4b9fd1/include", "-I", "/home/dev/.xmake/packages/o/openssl3/3.6.0/230aa242866e4a7eae3ca8cf326b9ce5/include", "-DNDEBUG", "-o", "build/.objs/couple/linux/x86_64/release/src/deps.c.o", "src/deps.c"],
+  "file": "src/deps.c"
+}]
