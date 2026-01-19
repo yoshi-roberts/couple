@@ -37,6 +37,8 @@ ConsoleResult console_parse(Arena *arena, Array *commands, int argc, const char 
 
 		} else if (string_cmp(&cmd_name, &cmd->name)) {
 
+			result.command_index = i;
+
 			// Get args
 			Array args = array_make(arena, String, argc - 2);
 

@@ -43,8 +43,6 @@ void build_win64(Arena *arena, Project *proj, Dependency *dep) {
 		".exe"
 	);
 
-	printf("NEW EXE PATH: %s\n", lit(&new_path));
-
 	FILE *exe = fopen(lit(&exe_path), "ab");   // append binary
 	FILE *love = fopen(lit(&love_path), "rb");
 
@@ -61,28 +59,4 @@ void build_win64(Arena *arena, Project *proj, Dependency *dep) {
 
 	fclose(love);
 	fclose(exe);
-
-	// FILE *exe_fptr = fopen(lit(&exe_path), "rb");
-	//    FILE *love_fptr = fopen(lit(&love_path), "rb");
-	//    FILE *new_fptr = fopen(lit(&new_path), "wb");
-	//
-	//    // Check if the files were opened successfully
-	//    if (exe_fptr == NULL || love_fptr == NULL || new_fptr == NULL) {
-	//        printf("Error opening files!\n");
-	//    }
-	//
-	//    // Copy contents of the first file to the third file
-	//    char ch;
-	//    while ((ch = fgetc(exe_fptr)) != EOF) {
-	//        fputc(ch, new_fptr);
-	//    }
-	//
-	//    // Copy contents of the second file to the third file
-	//    while ((ch = fgetc(love_fptr)) != EOF) {
-	//        fputc(ch, new_fptr);
-	//    }
-	//
-	//    fclose(exe_fptr);
-	//    fclose(love_fptr);
-	//    fclose(new_fptr);
 }

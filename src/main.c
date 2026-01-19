@@ -23,49 +23,55 @@ int main(int argc, const char** argv) {
 		return 0;
 	}
 
-	if (string_cmp_lit(&result.command, "init")) {
+	switch (result.command_index) {
 
-		if (len(&result.args) == 1) {
+		case 0: break; // help command will be run automatically.
+	
+		case 1:
+			if (len(&result.args) == 1) {
 
+				String *path = array_get_ptr(String, &result.args, 0);
+				project_init(&arena, lit(path));
+			}
+			break;
+
+		case 2: {
 			String *path = array_get_ptr(String, &result.args, 0);
-			project_init(&arena, lit(path));
+			printf("PATH: %s\n", lit(path));
+			Project proj = project_load(&arena);
+			String love_cmd = cat(&arena, "love ", lit(&proj.directories.src));
+
+			system(lit(&love_cmd));
+
+			break;
 		}
 
-	} else if (string_cmp_lit(&result.command, "build")) {
+		case 3: {
+			Project proj = project_load(&arena);
 
-		Project proj = project_load(&arena);
+			if (proj.initialized) {
 
-		if (proj.initialized) {
+				String *target = array_get_ptr(String, &result.args, 0);
 
-			String *target = array_get_ptr(String, &result.args, 0);
+				// Make sure build dir exists.
+				if (!directory_exists(lit(&proj.directories.build))) {
+					directory_make(lit(&proj.directories.build));
+					printf("Created build directory\n");
+				}
 
-			// Make sure build dir exists.
-			if (!directory_exists(lit(&proj.directories.build))) {
-				directory_make(lit(&proj.directories.build));
-				printf("Created build directory\n");
+				Dependency dep = dep_init(&arena, target);
+
+				if (!dep_check(&arena, &dep)) {
+
+					int downloaded = dep_get(&arena, &dep);
+					printf("DOWNLOADED: %d\n", downloaded);
+				}
+
+				build_love(&arena, &proj);
+				build_win64(&arena, &proj, &dep);
 			}
-
-			Dependency dep = dep_init(&arena, target);
-
-			if (!dep_check(&arena, &dep)) {
-
-				int downloaded = dep_get(&arena, &dep);
-				printf("DOWNLOADED: %d\n", downloaded);
-			}
-
-			build_love(&arena, &proj);
-			build_win64(&arena, &proj, &dep);
+			break;
 		}
-
-
-	} else if (string_cmp_lit(&result.command, "run")) {
-
-		String *path = array_get_ptr(String, &result.args, 0);
-		printf("PATH: %s\n", lit(path));
-		Project proj = project_load(&arena);
-		String love_cmd = cat(&arena, "love ", lit(&proj.directories.src));
-
-		system(lit(&love_cmd));
 	}
 
 	arena_free(&arena);

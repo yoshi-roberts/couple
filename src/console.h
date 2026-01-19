@@ -19,6 +19,7 @@ typedef struct {
 
 typedef struct {
 	String command;
+	usize command_index;
 	Array args;
 	bool initialized;
 } ConsoleResult;
