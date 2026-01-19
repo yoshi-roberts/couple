@@ -10,8 +10,13 @@ static literal file_version_prefix[] = {
 };
 
 static literal file_name[] = {
-	"win64.zip",
-	"x86_64.AppImage"
+	"win64",
+	"x86_64"
+};
+
+static literal file_extension[] = {
+	".zip",
+	".AppImage"
 };
 
 DependencyPlatform str_to_plat(String *plat) {
@@ -36,9 +41,11 @@ Dependency dep_init(Arena *arena, String *plat) {
 	literal love_version = version_str[dep.version];
 	literal version_prefix = file_version_prefix[dep.version];
 	literal name = file_name[dep.version];
+	literal ext = file_extension[dep.version];
 
 	dep.platform = str_to_plat(plat);
 	dep.love_version = str(love_version);
+	dep.file_name = cat(arena, version_prefix, name);
 	dep.url = cat(
 		arena,
 		DEP_BASE_URL,
@@ -46,18 +53,19 @@ Dependency dep_init(Arena *arena, String *plat) {
 		"/",
 		version_prefix,
 		name,
+		ext
 	);
 
-	dep.path = cat(arena, "deps/", love_version, "/", version_prefix, name);
-	printf("DEP PATH: %s\n", lit(&dep.path));
+	dep.full_path = cat(arena, "deps/", love_version, "/", version_prefix, name, ext);
+	printf("DEP PATH: %s\n", lit(&dep.full_path));
 
 	return dep;
 }
 
 bool dep_check(Arena *arena, Dependency *dep) {
 
-	if (!file_exists(lit(&dep->path))) {
-		printf("Missing dependency %s\n", lit(&dep->path));
+	if (!file_exists(lit(&dep->full_path))) {
+		printf("Missing dependency %s\n", lit(&dep->full_path));
 		return false;
 	}
 
@@ -89,7 +97,7 @@ int dep_get(Arena *arena, Dependency *dep) {
 
 	if (curl) {
 
-		fp = fopen(lit(&dep->path),"wb");
+		fp = fopen(lit(&dep->full_path),"wb");
 
 		curl_easy_setopt(curl, CURLOPT_URL, lit(&dep->url));
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);

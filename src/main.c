@@ -53,8 +53,8 @@ int main(int argc, const char** argv) {
 				printf("DOWNLOADED: %d\n", downloaded);
 			}
 
-			// build_love(&arena, &proj);
-			// build_win64(&arena, &proj);
+			build_love(&arena, &proj);
+			build_win64(&arena, &proj, &dep);
 		}
 
 

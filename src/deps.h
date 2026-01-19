@@ -22,7 +22,8 @@ typedef struct {
 	DependencyVersion version;
 	String love_version;
 	String url;
-	String path;
+	String file_name;
+	String full_path;
 } Dependency;
 
 Dependency dep_init(Arena *arena, String *plat);
