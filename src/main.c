@@ -39,6 +39,12 @@ int main(int argc, const char** argv) {
 
 			String *target = array_get_ptr(String, &result.args, 0);
 
+			// Make sure build dir exists.
+			if (!directory_exists(lit(&proj.directories.build))) {
+				directory_make(lit(&proj.directories.build));
+				printf("Created build directory\n");
+			}
+
 			if (!dep_check(&arena, target)) {
 
 				int downloaded = dep_get(&arena, target);
@@ -46,6 +52,7 @@ int main(int argc, const char** argv) {
 			}
 
 			build_love(&arena, &proj);
+			build_win64(&arena, &proj);
 		}
 
 

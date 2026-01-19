@@ -58,12 +58,6 @@ void _zip_walk(Arena *arena, struct zip_t *zip, String path, String relative_pat
 
 void build_love(Arena *arena, Project *proj) {
 
-	// Make sure build dir exists.
-	if (!directory_exists(lit(&proj->directories.build))) {
-		directory_make(lit(&proj->directories.build));
-		printf("Created build directory\n");
-	}
-
 	String zip_path = cat(arena, lit(&proj->directories.build), "/", lit(&proj->package.name), ".love");
 	printf("ZIP PATH: %s\n", lit(&zip_path));
 

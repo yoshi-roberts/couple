@@ -6,6 +6,11 @@ static literal url_postfix[] = {
 	"11.5/love-11.5-x86_64.AppImage"
 };
 
+static literal file_name[] = {
+	"win64.zip",
+	"linux.AppImage"
+};
+
 Dependency plat_to_dep(String *plat) {
 
 	if (string_cmp_lit(plat, "win64")) {
@@ -19,7 +24,7 @@ Dependency plat_to_dep(String *plat) {
 
 bool dep_check(Arena *arena, String *plat) {
 
-	String full_path = cat(arena, "build/", lit(plat));
+	String full_path = cat(arena, "build/deps/", lit(plat));
 
 	if (!file_exists(lit(&full_path))) {
 		printf("Missing dependency %s\n", lit(plat));
@@ -41,7 +46,11 @@ int dep_get(Arena *arena, String *plat) {
 	String url = cat(arena, DEP_BASE_URL, url_postfix[dep]);
 	printf("DEP URL: %s\n", lit(&url));
 
-	String dep_path = cat(arena, "build/", lit(plat));
+	if(!directory_exists("deps")) {
+		directory_make("deps");
+	}
+
+	String dep_path = cat(arena, "deps/", lit(plat));
 	printf("DEP PATH: %s\n", lit(&dep_path));
 
 	CURL *curl;
