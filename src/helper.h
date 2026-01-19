@@ -130,7 +130,7 @@ String string_new(literal string_lit);
 String string_make(Arena *arena, usize capacity);
 String string_copy(Arena *arena, String *original);
 void string_write(String *string, char *string_lit);
-char string_get(String *string, usize index);
+i8 string_get(String *string, usize index);
 bool string_cmp(String *a, String *b);
 bool string_cmp_lit(String *a, literal b);
 String string_cat(Arena *arena, Array literals);

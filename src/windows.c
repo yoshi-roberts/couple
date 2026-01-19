@@ -11,7 +11,6 @@ static int on_extract_entry(const char *filename, void *arg) {
 
 void build_win64(Arena *arena, Project *proj) {
 
-	// String zip_path = cat(arena, lit(&proj->directories.build), "/deps/win64");
 	String zip_path = str("deps/win64");
 
 	printf("%s\n", lit(&zip_path));
@@ -20,5 +19,20 @@ void build_win64(Arena *arena, Project *proj) {
 	zip_extract(lit(&zip_path), "build/win64", on_extract_entry, &arg);
 
 
-	// TODO: Merge .love into exe.
+	// FILE *exe_fptr = fopen("build/love.exe", "r");
+	//
+	// if (!file.fptr) {
+	// 	error("Could not open file.");
+	// }
+	//
+	// // Read contents
+	//
+	// fseek(file.fptr, 0, SEEK_END); 
+	// usize size = ftell(file.fptr);
+	// fseek(file.fptr, 0, SEEK_SET);
+	//
+	// file.contents = string_make(arena, size);
+	// fread(file.contents.chars, size, 1, file.fptr);
+	//
+	// fclose(file.fptr);
 }

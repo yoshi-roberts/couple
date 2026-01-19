@@ -45,14 +45,16 @@ int main(int argc, const char** argv) {
 				printf("Created build directory\n");
 			}
 
-			if (!dep_check(&arena, target)) {
+			Dependency dep = dep_init(&arena, target);
 
-				int downloaded = dep_get(&arena, target);
+			if (!dep_check(&arena, &dep)) {
+
+				int downloaded = dep_get(&arena, &dep);
 				printf("DOWNLOADED: %d\n", downloaded);
 			}
 
-			build_love(&arena, &proj);
-			build_win64(&arena, &proj);
+			// build_love(&arena, &proj);
+			// build_win64(&arena, &proj);
 		}
 
 

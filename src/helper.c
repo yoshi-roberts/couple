@@ -209,6 +209,15 @@ String string_cat(Arena *arena, Array literals) {
 	return new;
 }
 
+i8 string_get(String *string, usize index) {
+
+	if (index >= 0 && index < string->length) {
+			return *(string->chars + index * sizeof(i8));
+	}
+
+	return '\0';
+}
+
 bool string_cmp(String *a, String *b) {
 	if (strcmp(lit(a), lit(b)) == 0) {
 		return true;

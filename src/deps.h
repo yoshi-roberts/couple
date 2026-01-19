@@ -7,14 +7,29 @@
 #define DEP_BASE_URL "https://github.com/love2d/love/releases/download/"
 
 typedef enum {
-	WINDOWS_LATEST,
-	LINUX_LATEST,
-	INVALID_DEP
-} Dependency; 
+	PLATFORM_WINDOWS,
+	PLATFORM_LINUX,
+	PLATFORM_INVALID
+} DependencyPlatform; 
 
+typedef enum {
+	VERSION_LATEST = 0,
+	VERSION_11_5 = 0
+} DependencyVersion;
+
+typedef struct {
+	DependencyPlatform platform;
+	DependencyVersion version;
+	String love_version;
+	String url;
+	String path;
+} Dependency;
+
+Dependency dep_init(Arena *arena, String *plat);
 int _download_dep(Arena *arena, literal url);
-bool dep_check(Arena *arena, String *plat);
-int dep_get(Arena *arena, String *plat);
-Dependency plat_to_dep(String *plat);
+bool dep_check(Arena *arena, Dependency *dep);
+int dep_get(Arena *arena, Dependency *dep);
+DependencyPlatform str_to_plat(String *plat);
+literal plat_to_path(DependencyPlatform plat);
 
 #endif // !DEPS_H
