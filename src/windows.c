@@ -1,6 +1,7 @@
 #include "builders.h"
 #include "deps.h"
 #include "helper.h"
+#include <stdio.h>
 
 static int on_extract_entry(const char *filename, void *arg) {
     static int i = 0;
@@ -15,7 +16,7 @@ void build_win64(Arena *arena, Project *proj, Dependency *dep) {
 	int arg = 2;
 	zip_extract(lit(&dep->full_path), lit(&proj->directories.build), on_extract_entry, &arg);
 
-	String exe_path = cat(
+	String in_exe_path = cat(
 		arena, 
 		lit(&proj->directories.build),
 		"/",
@@ -31,9 +32,9 @@ void build_win64(Arena *arena, Project *proj, Dependency *dep) {
 		".love"
 	);
 
-	printf("EXE PATH: %s\n", lit(&exe_path));
+	printf("EXE PATH: %s\n", lit(&in_exe_path));
 
-	String new_path = cat(
+	String out_path = cat(
 		arena, 
 		lit(&proj->directories.build),
 		"/",
@@ -43,20 +44,32 @@ void build_win64(Arena *arena, Project *proj, Dependency *dep) {
 		".exe"
 	);
 
-	FILE *exe = fopen(lit(&exe_path), "ab");   // append binary
+	FILE *in_exe = fopen(lit(&in_exe_path), "rb");
+	FILE *out_exe = fopen(lit(&out_path), "wb");
 	FILE *love = fopen(lit(&love_path), "rb");
 
-	if (!exe || !love) {
+	if (!in_exe || !out_exe || !love) {
 		perror("fopen");
 	}
 
 	char buffer[8192];
 	size_t n;
 
-	while ((n = fread(buffer, 1, sizeof(buffer), love)) > 0) {
-		fwrite(buffer, 1, n, exe);
+
+	// Copy love.exe
+	while ((n = fread(buffer, 1, sizeof(buffer), in_exe)) > 0) {
+		fwrite(buffer, 1, n, out_exe);
 	}
 
+	// Write to new exe
+	while ((n = fread(buffer, 1, sizeof(buffer), love)) > 0) {
+		fwrite(buffer, 1, n, out_exe);
+	}
+
+	fclose(in_exe);
 	fclose(love);
-	fclose(exe);
+	fclose(out_exe);
+
+	// Delete the original exe.
+	remove(lit(&in_exe_path));
 }

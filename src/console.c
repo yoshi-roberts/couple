@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include "console.h"
 
 void console_show_help(Array *commands) {
@@ -57,6 +56,7 @@ ConsoleResult console_parse(Arena *arena, Array *commands, int argc, const char 
 			result.command = cmd_name;
 			result.args = args;
 			result.initialized = true;
+			result.callback = cmd->callback;
 
 			return result;
 		}
